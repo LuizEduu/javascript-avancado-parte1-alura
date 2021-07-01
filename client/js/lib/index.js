@@ -4,36 +4,43 @@ function calculateVolume(value, quantity) {
   return Number(value) * Number(quantity);
 }
 
-function createTd(value) {
-  const td = document.createElement("td");
-  td.textContent = value;
-  return td;
+function appendTds(inputs, tr) {
+  inputs.forEach((input) => {
+    const td = document.createElement("td");
+    td.textContent = input.value;
+    tr.appendChild(td);
+  });
+
+  const tdVolume = document.createElement("td");
+  tdVolume.textContent = inputs[2].value * inputs[1].value;
+  tr.appendChild(tdVolume);
 }
 
 function getInputValues() {
-  const data = document.querySelector("#data").value;
-  const quantity = document.querySelector("#quantidade").value;
-  const value = document.querySelector("#valor").value;
+  const inputs = [
+    document.querySelector("#data"),
+    document.querySelector("#quantidade"),
+    document.querySelector("#valor"),
+  ];
 
-  return {
-    data,
-    quantity,
-    value,
-    volume: calculateVolume(value, quantity),
-  };
+  return inputs;
+}
+
+function clearInputs(inputs) {
+  inputs.forEach((input) => {
+    input.value = "";
+  });
 }
 
 button.addEventListener("click", function (event) {
   event.preventDefault();
   const tbody = document.querySelector("tbody");
-
+  const tr = document.createElement("tr");
   const negotiation = getInputValues();
 
-  const tr = document.createElement("tr");
-  tr.appendChild(createTd(negotiation.data));
-  tr.appendChild(createTd(negotiation.quantity));
-  tr.appendChild(createTd(negotiation.value));
-  tr.appendChild(createTd(negotiation.volume));
+  appendTds(negotiation, tr);
 
   tbody.appendChild(tr);
+  clearInputs(negotiation);
+  negotiation[0].focus()
 });
