@@ -74,11 +74,10 @@
 
     <script src="js/app/models/Negotiation.js"></script>
     <script>
-      const negotiation1 = new Negotiation();
-
       const negotiation2 = new Negotiation(new Date(), 50, 10);
-      console.log(negotiation2.getVolume());
-
+      console.log(negotiation2.data);
+      negotiation2.data.setDate(11)
+      console.log(negotiation2.data);
     </script>
   </body>
 </html>
