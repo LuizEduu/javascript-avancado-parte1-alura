@@ -19,6 +19,6 @@ class NegotiationController {
       negotiation.data
     );
 
-    console.log(convertedDateToBrFormat)
+    console.log(convertedDateToBrFormat);
   }
 }
