@@ -1,7 +1,6 @@
 class NegotiationController {
   constructor() {
     const $ = document.querySelector.bind(document);
-
     this._data = $("#data");
     this._quantity = $("#quantidade");
     this._value = $("#valor");
@@ -10,13 +9,16 @@ class NegotiationController {
   add(event) {
     event.preventDefault();
 
-    const convertedDate = convertDate(data.value);
     const negotiation = new Negotiation(
-      convertedDate,
+      DateHelper.convertStringToDate(data.value),
       this._quantity.value,
       this._value.value
     );
 
-    console.log(negotiation);
+    const convertedDateToBrFormat = DateHelper.convertedDateToString(
+      negotiation.data
+    );
+
+    console.log(convertedDateToBrFormat)
   }
 }
