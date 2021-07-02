@@ -17,6 +17,6 @@ class NegotiationController {
       this._value.value
     );
 
-    console.log(negotiation.data);
+    console.log(negotiation);
   }
 }

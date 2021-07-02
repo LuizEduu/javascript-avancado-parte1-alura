@@ -1,5 +1,6 @@
 function convertDate(date) {
-  const splitDate = date.split("-");
-  const convertedDate = new Date(splitDate);
+  const convertedDate = new Date(
+    ...date.split("-").map((item, index) => (index == 1 ? item - 1 : item))
+  );
   return convertedDate;
 }
