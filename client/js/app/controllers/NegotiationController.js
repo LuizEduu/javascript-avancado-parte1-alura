@@ -9,7 +9,6 @@ class NegotiationController {
     this.messageViewElement = $("#messageView");
 
     this.listNegotiations = new ListNegotiations((model) => {
-      console.log(this);
       this.listNegotiationsView.update(model);
     });
 
