@@ -4,11 +4,17 @@ class NegotiationController {
     this._data = $("#data");
     this._quantity = $("#quantidade");
     this._value = $("#valor");
-    
-    this.listNegotiations = new ListNegotiations();
+
     this.listNegotiationsViewElement = $("#negotiationsView");
-    this.listNegotiationsView = new ListNegotiationsView(this.listNegotiationsViewElement);
+    this.messageViewElement = $("#messageView");
+
+    this.listNegotiations = new ListNegotiations();
+    this.listNegotiationsView = new ListNegotiationsView(
+      this.listNegotiationsViewElement
+    );
     this.listNegotiationsView.update(this.listNegotiations);
+    this.message;
+    this.messageView = new MessageView(this.messageViewElement);
   }
 
   add(event) {
@@ -18,8 +24,11 @@ class NegotiationController {
 
     this.listNegotiations.add(negotiation);
     this.listNegotiationsView.update(this.listNegotiations);
+    this.message = new Message("negociação adicionada com sucesso");
+    this.messageView.update(this.message);
 
     this._clearForm();
+    this.messageView.removeMessage();
   }
 
   _createNegotiation() {
