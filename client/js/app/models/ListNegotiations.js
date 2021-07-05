@@ -1,18 +1,14 @@
 class ListNegotiations {
-  constructor(callback) {
+  constructor() {
     this._negotiations = [];
-    this._callback = callback;
   }
 
   add(negotiation) {
     this._negotiations.push(negotiation);
-    //negotiationController.listNegotiationsView.update(listNegotiations)
-    this._callback(this);
   }
 
   clear() {
     this._negotiations = [];
-    this._callback(this);
   }
 
   get negotiations() {

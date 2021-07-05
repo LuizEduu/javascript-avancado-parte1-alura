@@ -8,9 +8,7 @@ class NegotiationController {
     this.listNegotiationsViewElement = $("#negotiationsView");
     this.messageViewElement = $("#messageView");
 
-    this.listNegotiations = new ListNegotiations((model) => {
-      this.listNegotiationsView.update(model);
-    });
+    this.listNegotiations = new ListNegotiations();
 
     this.listNegotiationsView = new ListNegotiationsView(
       this.listNegotiationsViewElement
