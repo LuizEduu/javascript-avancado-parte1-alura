@@ -8,11 +8,11 @@ class DateHelper {
     return convertedDate;
   }
 
-  static convertedDateToString(date) {
-    const regex = /[a-z]* \d{2} \d{4}/gi;
+  static convertDateToString(date) {
+    const regex = /^[a-z]* [a-z]* \d{2} \d{4}/gi;
 
     if (!regex.test(date)) {
-      throw new Error("Invalid Date informe no padrão yyyy-MM-dd");
+      throw new Error("Data inválida, informe no padrão yyyy-MM-dd");
     }
 
     const getDay = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
