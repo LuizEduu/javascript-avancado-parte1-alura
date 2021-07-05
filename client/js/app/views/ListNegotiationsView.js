@@ -1,9 +1,9 @@
-class ListNegotiationsView {
-  constructor(elementHTML) {
-    this.elementHTML = elementHTML;
+class ListNegotiationsView extends View {
+  constructor(element) {
+    super(element);
   }
 
-  _template(model) {
+  template(model) {
     return `
     <table class="table table-hover table-bordered">
     <thead>
@@ -42,9 +42,5 @@ class ListNegotiationsView {
     </tfoot>
   </table>
     `;
-  }
-
-  update(model) {
-    return (this.elementHTML.innerHTML = this._template(model));
   }
 }
