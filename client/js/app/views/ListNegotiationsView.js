@@ -20,16 +20,26 @@ class ListNegotiationsView {
         .map(
           (negotiation) =>
             `
+            <tr>
             <td>${DateHelper.convertDateToString(negotiation.data)}</td>
             <td>${negotiation.quantity}</td>
             <td>${negotiation.value}</td>
             <td>${negotiation.volume}</td>
+            </tr>
           `
         )
         .join("")}
     </tbody>
 
-    <tfoot></tfoot>
+    <tfoot>
+          <td colspan="3"></td>
+          <td>
+            ${model.negotiations.reduce(
+              (total, negotiation) => total + negotiation.volume,
+              0
+            )}
+          </td>
+    </tfoot>
   </table>
     `;
   }
