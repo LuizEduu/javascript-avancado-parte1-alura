@@ -8,12 +8,15 @@ class NegotiationController {
     this.listNegotiationsViewElement = $("#negotiationsView");
     this.messageViewElement = $("#messageView");
 
-    this.listNegotiations = new ListNegotiations();
+    this.listNegotiations = new ListNegotiations(this, function (model) {
+      this.listNegotiationsView.update(model);
+    });
+
     this.listNegotiationsView = new ListNegotiationsView(
       this.listNegotiationsViewElement
     );
-    this.listNegotiationsView.update(this.listNegotiations);
-    this.message;
+
+    this.message = new Message();
     this.messageView = new MessageView(this.messageViewElement);
   }
 
@@ -23,11 +26,17 @@ class NegotiationController {
     const negotiation = this._createNegotiation();
 
     this.listNegotiations.add(negotiation);
-    this.listNegotiationsView.update(this.listNegotiations);
-    this.message = new Message("negociação adicionada com sucesso");
+    this.message.message = "Negociação adicionada com sucesso";
     this.messageView.update(this.message);
 
     this._clearForm();
+    this.messageView.removeMessage();
+  }
+
+  delete() {
+    this.listNegotiations.clear();
+    this.message.message = "Negociações deletadas com sucesso";
+    this.messageView.update(this.message);
     this.messageView.removeMessage();
   }
 
