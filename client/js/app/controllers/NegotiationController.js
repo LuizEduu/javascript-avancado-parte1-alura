@@ -44,7 +44,53 @@ class NegotiationController {
   importNegotiations() {
     const importNegotiationsService = new NegotiationsService();
 
-    importNegotiationsService.getNegotiationsWeek((err, negotiations) => {
+    const getNegotiationsWeek = importNegotiationsService.getNegotiationsWeek();
+
+    getNegotiationsWeek
+      .then((negotiations) =>
+        negotiations.forEach((negotiation) => {
+          this._listNegotiations.add(negotiation);
+          this._message.content = "Negociações importadas com sucesso";
+        })
+      )
+      .catch((err) => {
+        console.log(err);
+        this._message.content = "Erro ao importar as negociações";
+      });
+
+    const getNegotiationsLastWeek =
+      importNegotiationsService.getNegotiationsLastWeek();
+
+    getNegotiationsLastWeek
+      .then((negotiations) => {
+        negotiations.forEach((negotiation) => {
+          this._listNegotiations.add(negotiation);
+          this._message.content = "Negociações importadas com sucesso";
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        this._message.content =
+          "Erro ao importar as negociações da semana passada";
+      });
+
+    const getNegotiationsDelayedWeek =
+      importNegotiationsService.getNegotiationsDelayedWeek();
+
+    getNegotiationsDelayedWeek
+      .then((negotiations) => {
+        negotiations.forEach((negotiation) => {
+          this._listNegotiations.add(negotiation);
+          this._message.content = "Negociações importadas com sucesso";
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        this._message.content =
+          "Erro ao importar as negociações da semana retrasada";
+      });
+
+    /* importNegotiationsService.getNegotiationsWeek((err, negotiations) => {
       if (err) {
         this._message = `Erro ao importar as negociações ${err}`;
         return;
@@ -56,7 +102,7 @@ class NegotiationController {
 
       this._message.content = "Negociações importadas com sucesso.";
       this._messageView.removeMessage();
-    });
+    }); */
   }
 
   _createNegotiation() {
