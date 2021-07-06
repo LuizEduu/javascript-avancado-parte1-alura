@@ -50,11 +50,12 @@ class NegotiationController {
       importNegotiationsService.getNegotiationsDelayedWeek(),
     ])
       .then((allNegotiationsResult) => {
-        allNegotiationsResult.forEach((negotiations) =>
-          negotiations.forEach((negotiation) =>
-            this._listNegotiations.add(negotiation)
+        allNegotiationsResult
+          .reduce(
+            (fletedArray, negotiations) => fletedArray.concat(negotiations),
+            []
           )
-        );
+          .forEach((negotiation) => this._listNegotiations.add(negotiation));
 
         this._message.content = "Negociações importadas com sucesso";
       })
