@@ -3,7 +3,6 @@ class ProxyFactory {
     return new Proxy(model, {
       get(target, prop, reciever) {
         if (props.includes(prop) && ProxyFactory._isFunction(target[prop])) {
-          
           return function () {
             //se for retorna uma nova function aplicando as traps
             Reflect.apply(target[prop], target, arguments); //aplica a trap na função especifica, passando o arguments que contem todos os argumentos passados a função
@@ -15,11 +14,12 @@ class ProxyFactory {
       },
 
       set(target, prop, value, reciever) {
+        const result = Reflect.set(target, prop, value, reciever);
         if (props.includes(prop)) {
           action(target);
         }
-        
-        return Reflect.set(target, prop, value, reciever);
+
+        return result;
       },
     });
   }
