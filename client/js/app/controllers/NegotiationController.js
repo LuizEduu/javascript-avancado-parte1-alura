@@ -44,9 +44,26 @@ class NegotiationController {
   importNegotiations() {
     const importNegotiationsService = new NegotiationsService();
 
-    const getNegotiationsWeek = importNegotiationsService.getNegotiationsWeek();
+    Promise.all([
+      importNegotiationsService.getNegotiationsWeek(),
+      importNegotiationsService.getNegotiationsLastWeek(),
+      importNegotiationsService.getNegotiationsDelayedWeek(),
+    ])
+      .then((allNegotiationsResult) => {
+        allNegotiationsResult.forEach((negotiations) =>
+          negotiations.forEach((negotiation) =>
+            this._listNegotiations.add(negotiation)
+          )
+        );
 
-    getNegotiationsWeek
+        this._message.content = "Negociações importadas com sucesso";
+      })
+      .catch((err) => {
+        console.log(err);
+        this._message.content = "Erro ao importar as negociações";
+      });
+
+    /* getNegotiationsWeek
       .then((negotiations) =>
         negotiations.forEach((negotiation) => {
           this._listNegotiations.add(negotiation);
@@ -88,21 +105,7 @@ class NegotiationController {
         console.log(err);
         this._message.content =
           "Erro ao importar as negociações da semana retrasada";
-      });
-
-    /* importNegotiationsService.getNegotiationsWeek((err, negotiations) => {
-      if (err) {
-        this._message = `Erro ao importar as negociações ${err}`;
-        return;
-      }
-
-      negotiations.forEach((negotiation) =>
-        this._listNegotiations.add(negotiation)
-      );
-
-      this._message.content = "Negociações importadas com sucesso.";
-      this._messageView.removeMessage();
-    }); */
+      }); */
   }
 
   _createNegotiation() {
