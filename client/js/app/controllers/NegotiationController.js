@@ -9,8 +9,9 @@ class NegotiationController {
 
     this._listNegotiations = new DataBinding(
       new ListNegotiations(),
-      this._listNegotiationsView = new ListNegotiationsView(
-        this._listNegotiationsViewElement),
+      (this._listNegotiationsView = new ListNegotiationsView(
+        this._listNegotiationsViewElement
+      )),
       "add",
       "clear"
     );
@@ -19,7 +20,7 @@ class NegotiationController {
 
     this._message = new DataBinding(
       new Message(),
-      this._messageView = new MessageView(this._messageViewElement),
+      (this._messageView = new MessageView(this._messageViewElement)),
       "content"
     );
   }
@@ -38,6 +39,24 @@ class NegotiationController {
     this._listNegotiations.clear();
     this._message.content = "Negociações deletadas com sucesso";
     this._messageView.removeMessage();
+  }
+
+  importNegotiations() {
+    const importNegotiationsService = new NegotiationsService();
+
+    importNegotiationsService.getNegotiationsWeek((err, negotiations) => {
+      if (err) {
+        this._message = `Erro ao importar as negociações ${err}`;
+        return;
+      }
+
+      negotiations.forEach((negotiation) =>
+        this._listNegotiations.add(negotiation)
+      );
+
+      this._message.content = "Negociações importadas com sucesso.";
+      this._messageView.removeMessage();
+    });
   }
 
   _createNegotiation() {

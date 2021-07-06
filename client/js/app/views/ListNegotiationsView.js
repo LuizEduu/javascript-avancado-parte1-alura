@@ -34,10 +34,7 @@ class ListNegotiationsView extends View {
     <tfoot>
           <td colspan="3"></td>
           <td>
-            ${model.negotiations.reduce(
-              (total, negotiation) => total + negotiation.volume,
-              0
-            )}
+            ${model.totalVolume}
           </td>
     </tfoot>
   </table>

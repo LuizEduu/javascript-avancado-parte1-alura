@@ -14,4 +14,11 @@ class ListNegotiations {
   get negotiations() {
     return [].concat(this._negotiations);
   }
+
+  get totalVolume() {
+    return this._negotiations.reduce(
+      (total, negotation) => (total += negotation.volume),
+      0
+    );
+  }
 }

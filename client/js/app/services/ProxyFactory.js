@@ -1,7 +1,10 @@
 class ProxyFactory {
   static create(model, props, action) {
+
     return new Proxy(model, {
+
       get(target, prop, reciever) {
+        
         if (props.includes(prop) && ProxyFactory._isFunction(target[prop])) {
           return function () {
             //se for retorna uma nova function aplicando as traps
