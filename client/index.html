@@ -73,20 +73,9 @@
     <script src="js/app/views/ListNegotiationsView.js"></script>
     <script src="js/app/models/Message.js"></script>
     <script src="js/app/views/MessageView.js"></script>
+    <script src="js/app/services/ProxyFactory.js"></script>
     <script>
       let negotiationController = new NegotiationController();
-    </script>
-
-    <script>
-      const negotiation = new Proxy(new Negotiation(new Date(), 1, 100), {
-        get: function (target, prop, receiver) {
-          console.log(`prop ${prop} interceptada`);
-          return Reflect.get(target, prop, receiver);
-        },
-      });
-
-      console.log(negotiation.quantity);
-      console.log(negotiation.value);
     </script>
   </body>
 </html>

@@ -5,17 +5,27 @@ class NegotiationController {
     this._quantity = $("#quantidade");
     this._value = $("#valor");
 
-    this.listNegotiationsViewElement = $("#negotiationsView");
-    this.messageViewElement = $("#messageView");
+    this._listNegotiationsViewElement = $("#negotiationsView");
+    this._messageViewElement = $("#messageView");
 
-    this.listNegotiations = new ListNegotiations();
-
-    this.listNegotiationsView = new ListNegotiationsView(
-      this.listNegotiationsViewElement
+    this._listNegotiations = new ListNegotiations();
+    this._listNegotiationsView = new ListNegotiationsView(
+      this._listNegotiationsViewElement
     );
 
-    this.message = new Message();
-    this.messageView = new MessageView(this.messageViewElement);
+    this._listNegotiationsView.update(this._listNegotiations);
+
+    this._message = new Message();
+    this._messageView = new MessageView(this._messageViewElement);
+
+    //criando um proxy para lista de negociações
+    this._listNegotiations = ProxyFactory.create(
+      new ListNegotiations(),
+      ["add", "remove"],
+      () => {
+        this._listNegotiationsView.update(this._listNegotiations);
+      }
+    );
   }
 
   add(event) {
@@ -23,19 +33,19 @@ class NegotiationController {
 
     const negotiation = this._createNegotiation();
 
-    this.listNegotiations.add(negotiation);
-    this.message.message = "Negociação adicionada com sucesso";
-    this.messageView.update(this.message);
+    this._listNegotiations.add(negotiation);
+    this._message.message = "Negociação adicionada com sucesso";
+    this._messageView.update(this._message);
 
     this._clearForm();
-    this.messageView.removeMessage();
+    this._messageView.removeMessage();
   }
 
   delete() {
-    this.listNegotiations.clear();
-    this.message.message = "Negociações deletadas com sucesso";
-    this.messageView.update(this.message);
-    this.messageView.removeMessage();
+    this._listNegotiations.clear();
+    this._message.message = "Negociações deletadas com sucesso";
+    this._messageView.update(this._message);
+    this._messageView.removeMessage();
   }
 
   _createNegotiation() {
