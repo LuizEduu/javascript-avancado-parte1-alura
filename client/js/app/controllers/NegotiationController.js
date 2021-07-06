@@ -44,25 +44,21 @@ class NegotiationController {
   importNegotiations() {
     const importNegotiationsService = new NegotiationsService();
 
-    Promise.all([
-      importNegotiationsService.getNegotiationsWeek(),
-      importNegotiationsService.getNegotiationsLastWeek(),
-      importNegotiationsService.getNegotiationsDelayedWeek(),
-    ])
-      .then((allNegotiationsResult) => {
-        allNegotiationsResult
+    importNegotiationsService
+      .getAllNegotiations()
+      .then((negotiations) => {
+        negotiations
           .reduce(
             (fletedArray, negotiations) => fletedArray.concat(negotiations),
             []
           )
           .forEach((negotiation) => this._listNegotiations.add(negotiation));
 
-        this._message.content = "Negociações importadas com sucesso";
+        this._message.content = "Negociações adicionadas com sucesso";
       })
-      .catch((err) => {
-        console.log(err);
-        this._message.content = "Erro ao importar as negociações";
-      });
+      .catch(
+        (err) => (this._message.content = "Erro ao importar as negociações")
+      );
   }
 
   _createNegotiation() {
