@@ -4,6 +4,7 @@ class MessageView extends View {
   }
 
   template(model) {
-    return `<p class="alert alert-info">${model.message}</p>`;
+    console.log(model.content)
+    return model.content ? `<p class="alert alert-info">${model.content}</p>`: "";
   }
 }

@@ -1,15 +1,11 @@
 class ProxyFactory {
-  static create(object, props, action) {
-    return new Proxy(object, {
-      
+  static create(model, props, action) {
+    return new Proxy(model, {
       get(target, prop, reciever) {
-        if (
-          props.includes(prop) &&
-          typeof target[prop] == typeof Function //verifica se é uma function
-        ) {
+        if (props.includes(prop) && ProxyFactory._isFunction(target[prop])) {
+          
           return function () {
             //se for retorna uma nova function aplicando as traps
-            console.log(target[prop]); //busca pela função add no alvo que é o listNegotiations
             Reflect.apply(target[prop], target, arguments); //aplica a trap na função especifica, passando o arguments que contem todos os argumentos passados a função
             return action(target);
           };
@@ -17,6 +13,18 @@ class ProxyFactory {
 
         return Reflect.get(target, prop, reciever); //se não for uma função só pega a propriedade
       },
+
+      set(target, prop, value, reciever) {
+        if (props.includes(prop)) {
+          action(target);
+        }
+        
+        return Reflect.set(target, prop, value, reciever);
+      },
     });
+  }
+
+  static _isFunction(fn) {
+    return typeof fn == typeof Function; //verifica se é uma function
   }
 }

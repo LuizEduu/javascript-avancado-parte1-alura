@@ -4,7 +4,6 @@ class ListNegotiations {
   }
 
   add(negotiation) {
-    console.log(negotiation)
     this._negotiations.push(negotiation);
   }
 

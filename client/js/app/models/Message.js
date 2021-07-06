@@ -1,13 +1,13 @@
 class Message {
-  constructor(message = "") {
-    this._message = message;
+  constructor(content = "") {
+    this._content = content;
   }
 
-  get message() {
-    return this._message;
+  get content() {
+    return this._content;
   }
 
-  set message(message) {
-    this._message = message;
+  set content(content) {
+    this._content = content;
   }
 }
