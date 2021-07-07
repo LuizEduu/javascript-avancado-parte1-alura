@@ -7,7 +7,7 @@ class ListNegotiationsView extends View {
     return `
     <table class="table table-hover table-bordered">
     <thead>
-      <tr>
+      <tr onclick="negotiationController.order(event)">
         <th>DATA</th>
         <th>QUANTIDADE</th>
         <th>VALOR</th>

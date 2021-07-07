@@ -21,4 +21,12 @@ class ListNegotiations {
       0
     );
   }
+
+  order(criteria) {
+    this._negotiations.sort(criteria);
+  }
+
+  reverse() {
+    this._negotiations.reverse();
+  }
 }

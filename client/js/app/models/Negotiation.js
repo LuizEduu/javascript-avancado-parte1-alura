@@ -1,8 +1,8 @@
 class Negotiation {
-  constructor(data, value = 0.0, quantity = 1) {
+  constructor(data, quantity = 1, value = 0.0) {
     this._data = new Date(data.getTime()); //cria um novo objeto de date a partir dos miliseconds da data informada pelo usuário
-    this._value = value;
     this._quantity = quantity;
+    this._value = value;
     Object.freeze(this);
   }
 

@@ -13,7 +13,9 @@ class NegotiationController {
         this._listNegotiationsViewElement
       )),
       "add",
-      "clear"
+      "clear",
+      "order",
+      "reverse"
     );
 
     this._messageViewElement = $("#messageView");
@@ -23,6 +25,8 @@ class NegotiationController {
       (this._messageView = new MessageView(this._messageViewElement)),
       "content"
     );
+
+    this._sortOrder = "";
   }
 
   add(event) {
@@ -77,5 +81,23 @@ class NegotiationController {
     this._value.value = "";
 
     this._data.focus();
+  }
+
+  order(event) {
+    const value = event.target.textContent.toLowerCase(); //pega o alvo filho do evento e seu valor
+
+    if (this._sortOrder == value) {
+      this._listNegotiations.reverse();
+    } else {
+      if (value == "quantidade") {
+        this._listNegotiations.order((a, b) => a.quantity - b.quantity);
+      } else if (value == "valor") {
+        this._listNegotiations.order((a, b) => a.value - b.value);
+      } else {
+        this._listNegotiations.order((a, b) => a.data - b.data);
+      }
+    }
+
+    this._sortOrder = value;
   }
 }
