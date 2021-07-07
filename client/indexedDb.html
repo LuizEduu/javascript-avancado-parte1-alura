@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aprendendo Indexed DB</title>
+  </head>
+  <body>
+    <script src="./js/app/models/Negotiation.js"></script>
+
+    <script>
+      const openRequest = indexedDB.open("aluraframe", 3);
+      let globalConnection;
+
+      openRequest.onupgradeneeded = (event) => {
+        console.log("banco criado ou alterado");
+
+        let connection = event.target.result;
+
+        if (connection.objectStoreNames.contains("negotiations")) {
+          connection.deleteObjectStore("negotiations");
+        }
+
+        connection.createObjectStore("negotiations", { autoIncrement: true });
+      };
+
+      openRequest.onsuccess = (event) => {
+        console.log("conexão obtida com sucesso");
+
+        globalConnection = event.target.result;
+      };
+
+      openRequest.onerror = (event) => {
+        console.log(e.target.error);
+      };
+
+      function add() {
+        //abrir uma transação com uma ObjectStore
+        const transaction = globalConnection.transaction(
+          ["negotiations"],
+          "readwrite"
+        );
+
+        const store = transaction.objectStore("negotiations"); //obter a object store para poder realizar operações
+
+        const negotiation = new Negotiation(new Date(), 1, 100);
+
+        const request = store.add(negotiation); // adicionar o objeto na store
+
+        request.onsuccess = (event) => {
+          console.log("Negociação adicionada com sucesso");
+        };
+
+        request.onerror = (event) => {
+          console.log("erro ao adicionar a negociação");
+        };
+      }
+
+      function listAllNegotiations() {
+        const transaction = globalConnection.transaction(
+          ["negotiations"],
+          "readonly"
+        );
+
+        const store = transaction.objectStore("negotiations");
+
+        //abre um cursor que fornece um ponteiro que aponta para cada elemento salvo na object store
+        const cursor = store.openCursor();
+
+        const negotiations = [];
+
+        cursor.onsuccess = (event) => {
+          const existNegotiation = event.target.result; //verifica se ainda contem dados para percorrer ou não
+
+          if (existNegotiation) {
+            const values = existNegotiation.value;
+
+            negotiations.push(
+              new Negotiation(
+                new Date(values._data, values._quantity, values._value)
+              )
+            );
+
+            existNegotiation.continue(); //chama o onsuccess novamente enquanto existir negociações a serem varridas
+          } else {
+            console.log(negotiations);
+          }
+        };
+
+        cursor.onerror = (event) => {
+          console.log("erro ao listar as negociações");
+        };
+      }
+    </script>
+  </body>
+</html>
