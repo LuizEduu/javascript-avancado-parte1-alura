@@ -27,21 +27,51 @@ class NegotiationController {
     );
 
     this._sortOrder = "";
+
+    ConnectionFactory.getConnection()
+      .then((connection) => new NegotiationDao(connection))
+      .then((dao) => dao.listNegotiations())
+      .then((negotiations) =>
+        negotiations.forEach((negotiation) =>
+          this._listNegotiations.add(negotiation)
+        )
+      )
+      .catch((err) => (this._message.content = "err"));
   }
 
   add(event) {
     event.preventDefault();
 
-    const negotiation = this._createNegotiation();
-    this._listNegotiations.add(negotiation);
-    this._message.content = "Negociação adicionada com sucesso";
-    this._clearForm();
-    this._messageView.removeMessage();
+    ConnectionFactory.getConnection()
+      .then((connection) => {
+        const negotiation = this._createNegotiation();
+
+        new NegotiationDao(connection).add(negotiation).then(() => {
+          this._listNegotiations.add(negotiation);
+          this._message.content = "Negociação adicionada com sucesso";
+          this._clearForm();
+          this._messageView.removeMessage();
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        this._message.content = "Não foi possível adicionar a negociação";
+        this._messageView.removeMessage();
+      });
   }
 
   delete() {
+    ConnectionFactory.getConnection()
+      .then((connection) => new NegotiationDao(connection))
+      .then((dao) => dao.deleteAllNegotiations())
+      .then((message) => {
+        this._message.content = message;
+        this._listNegotiations.clear();
+      })
+      .catch((error) => console.log(error));
+
     this._listNegotiations.clear();
-    this._message.content = "Negociações deletadas com sucesso";
+
     this._messageView.removeMessage();
   }
 
@@ -68,8 +98,8 @@ class NegotiationController {
   _createNegotiation() {
     const negotiation = new Negotiation(
       DateHelper.convertStringToDate(this._data.value),
-      this._quantity.value,
-      this._value.value
+      Number(this._quantity.value),
+      Number(this._value.value)
     );
 
     return negotiation;
