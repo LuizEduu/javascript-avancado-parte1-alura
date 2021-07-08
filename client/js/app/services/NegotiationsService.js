@@ -69,4 +69,47 @@ class NegotiationsService {
       }),
     ]);
   }
+
+  add(negotiation) {
+    return ConnectionFactory.getConnection()
+      .then((connection) => new NegotiationDao(connection))
+      .then((dao) => dao.add(negotiation))
+      .then(() => "Negociação adicionada com sucesso")
+      .catch(() => {
+        throw new Error("Não foi possível adicionar a negociação");
+      });
+  }
+
+  listAll() {
+    return ConnectionFactory.getConnection()
+      .then((connection) => new NegotiationDao(connection))
+      .then((dao) => dao.listNegotiations())
+      .catch(() => {
+        throw new Error("Não foi possível listar as negociações");
+      });
+  }
+
+  delete() {
+    return ConnectionFactory.getConnection()
+      .then((connection) => new NegotiationDao(connection))
+      .then((dao) => dao.deleteAllNegotiations())
+      .catch(() => {
+        throw new Error("Não foi possível apagar as negociações")
+      });
+  }
+
+  import(list) {
+    return this.getAllNegotiations()
+    .then((negotiations) =>
+      negotiations.filter(
+        (negotiations) =>
+          !list.some(
+            (existsNegotiation) =>
+              JSON.stringify(existsNegotiation) ==
+              JSON.stringify(negotiations)
+          )
+      )
+    )
+    .catch(() => "Não foi possível importar as negociações");
+  }
 }

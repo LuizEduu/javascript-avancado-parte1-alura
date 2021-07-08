@@ -10,7 +10,6 @@ class DateHelper {
 
   static convertDateToString(date) {
     const regex = /^[a-z]* [a-z]* \d{2} \d{4}/gi;
-
     if (!regex.test(date)) {
       throw new Error("Data inválida, informe no padrão yyyy-MM-dd");
     }

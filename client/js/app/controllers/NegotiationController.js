@@ -17,6 +17,7 @@ class NegotiationController {
       "order",
       "reverse"
     );
+    this._sortOrder = "";
 
     this._messageViewElement = $("#messageView");
 
@@ -26,73 +27,62 @@ class NegotiationController {
       "content"
     );
 
-    this._sortOrder = "";
+    this._negotiationService = new NegotiationsService();
 
-    ConnectionFactory.getConnection()
-      .then((connection) => new NegotiationDao(connection))
-      .then((dao) => dao.listNegotiations())
+    this._init();
+  }
+
+  _init() {
+    this._negotiationService
+      .listAll()
       .then((negotiations) =>
         negotiations.forEach((negotiation) =>
           this._listNegotiations.add(negotiation)
         )
       )
-      .catch((err) => (this._message.content = "err"));
+      .catch((err) => (this._message.content = err));
+
+    this.importNegotiations();
   }
 
   add(event) {
     event.preventDefault();
 
-    ConnectionFactory.getConnection()
-      .then((connection) => {
-        const negotiation = this._createNegotiation();
+    const negotiation = this._createNegotiation();
 
-        new NegotiationDao(connection).add(negotiation).then(() => {
-          this._listNegotiations.add(negotiation);
-          this._message.content = "Negociação adicionada com sucesso";
-          this._clearForm();
-          this._messageView.removeMessage();
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        this._message.content = "Não foi possível adicionar a negociação";
+    new NegotiationsService()
+      .add(negotiation)
+      .then((message) => {
+        this._listNegotiations.add(negotiation);
+        this._message.content = message;
+        this._clearForm();
         this._messageView.removeMessage();
-      });
+      })
+      .catch((err) => (this._message.content = err));
   }
 
   delete() {
-    ConnectionFactory.getConnection()
-      .then((connection) => new NegotiationDao(connection))
-      .then((dao) => dao.deleteAllNegotiations())
+    this._negotiationService
+      .delete()
       .then((message) => {
         this._message.content = message;
         this._listNegotiations.clear();
       })
-      .catch((error) => console.log(error));
-
-    this._listNegotiations.clear();
+      .catch((err) => (this._message.content = err));
 
     this._messageView.removeMessage();
   }
 
   importNegotiations() {
-    const importNegotiationsService = new NegotiationsService();
-
-    importNegotiationsService
-      .getAllNegotiations()
+    this._negotiationService
+      .import(this._listNegotiations.negotiations)
       .then((negotiations) => {
-        negotiations
-          .reduce(
-            (fletedArray, negotiations) => fletedArray.concat(negotiations),
-            []
-          )
-          .forEach((negotiation) => this._listNegotiations.add(negotiation));
-
-        this._message.content = "Negociações adicionadas com sucesso";
-      })
-      .catch(
-        (err) => (this._message.content = "Erro ao importar as negociações")
-      );
+        negotiations.forEach((negotiations) =>
+          negotiations.forEach((negotiation) => {
+            list.add(negotiation);
+          })
+        );
+      });
   }
 
   _createNegotiation() {
