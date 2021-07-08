@@ -42,7 +42,9 @@ class NegotiationController {
       )
       .catch((err) => (this._message.content = err));
 
-    this.importNegotiations();
+    setTimeout(() => {
+      this.importNegotiations();
+    }, 3000);
   }
 
   add(event) {
@@ -79,7 +81,7 @@ class NegotiationController {
       .then((negotiations) => {
         negotiations.forEach((negotiations) =>
           negotiations.forEach((negotiation) => {
-            list.add(negotiation);
+            this._listNegotiations.add(negotiation);
           })
         );
       });
